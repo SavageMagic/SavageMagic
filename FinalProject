@@ -14,9 +14,13 @@ def dCheck(ID):
 
 def main():
     if os.path.exists("Employee.json"):
-        jFile = open("Employee.json", "r")
-        jDict = json.load(jFile)
-        jFile.close()
+        try:
+            jFile = open("Employee.json", "r")
+            jDict = json.load(jFile)
+            jFile.close()
+
+        except IOError as e:
+            print(e)
 
         # Start new dictionary using sample data given if previous dict does not exist.
     else:
@@ -46,8 +50,8 @@ def main():
                  'Department': Emp_3.E_Department,
                  'Job Title': Emp_3.E_jTitle}]
         }
-    choice = '0'
 
+    choice = '0'
     while choice == '0':
 
         print("Choose one of the following options:")
@@ -55,10 +59,11 @@ def main():
         print("2: Add a new employee to the dictionary.")
         print("3: Change an existing employee’s name, department, or job title in the dictionary.")
         print("4: Delete an employee from the dictionary.")
-        print("5: Quit the program.")
-        choice = input('Choose an option betwee 1-5: ')
+        print("5: Show all employees in dictionary.")
+        print("6: Save and Quit the program.")
+        choice = input('Choose an option betwee 1-6: ')
 
-        if int(choice) == 1:
+        if choice == '1':
 
             ID = input('Enter the ID of the employee: ')
             dCheck(ID)
@@ -71,7 +76,7 @@ def main():
 
                 print('Not found')
 
-        elif int(choice) == 2:
+        elif choice == '2':
 
             # Get the id of employeee
 
@@ -113,12 +118,10 @@ def main():
 
                 print('Added')
 
-        elif int(choice) == 3:
+        elif choice == '3':
 
             ID = input('Enter ID of the employee: ')
-            while (not re.search('^[0-9]+$', ID)):
-                print("Please Enter Only Digits")
-                ID = input("Enter ID of the employee: ")
+            dCheck(ID)
             if ID in jDict.keys():
 
                 fname = input('Enter first name of the employee: ')
@@ -150,32 +153,42 @@ def main():
 
                 print('Not Found')
 
-        elif int(choice) == 4:
+        elif choice == '4':
 
             # Get the id of employee
 
             ID = input('Enter ID of the employee: ')
-            while (not re.search('^[0-9]+$', ID)):
-                print("Please Enter Only Digits")
-                ID = input("Enter ID of the employee: ")
+            dCheck(ID)
+
+
+            if ID in jDict.keys():
+                print("Deleted:", jDict.pop(ID))
+
+            else:
+                print('Not Found')
+
 
             # Display statement
 
-            print('Deleted: ', jDict.pop(int(ID), 'Not Found'))
+            # print('Deleted: ', jDict.pop(int(ID), 'Not Found'))
 
-        elif int(choice) == 5:
+        elif choice == '5':
             for key, values in jDict.items():
-                fname, lName, Department, jTitle = values
-                print(" Employee ID = {}, Name = {} {}, Department = {}, Job Title = {}".format(key, fName, lName,
-                                                                                                Department, jTitle))
-        elif int(choice) == 6:
+                print(key, values)
+        elif choice == '6':
 
-            print('OK Bye')
+            print('Program Terminated.')
+            with open("Employee.json", "w") as outfile:
+                outfile.write(json.dumps(jDict))
+                outfile.close()
 
             break
         else:
 
+            print('\n\n')
             print("Invalid Choice.")
+            print('\n\n')
+
         # Get the input from user
 
         # call dump method
@@ -193,4 +206,20 @@ if __name__ == "__main__":
 # Sources:
 # https://www.pythontutorial.net/python-basics/python-check-if-file-exists/
 # https://pythonspot.com/save-a-dictionary-to-a-file/
+#https://www.programiz.com/python-programming/methods/dictionary/pop
+# https://www.geeksforgeeks.org/read-write-and-parse-json-using-python/
+# https://www.geeksforgeeks.org/read-json-file-using-python/
+# https://docs.python.org/3/library/re.html
+#https://tutswiki.com/read-write-json-config-file-in-python/
+# Python | Working with JSON - convert python object into JSON : https://www.youtube.com/watch?v=-Hi61ZJ4aCY&t=883s
+# Tutorial for Converting JSON Data to Python Object | Python Tutorial : https://www.youtube.com/watch?v=mVX5SsK1jNE&t=356s
+# Python dataclasses will save you HOURS, also featuring attrs : https://www.youtube.com/watch?v=vBH6GRJ1REM&t=448s
+# How To Use JSON In Python : https://www.youtube.com/watch?v=-51jxlQaxyA
+# Creating an Updatable JSON database in Python (Application of Python for DH | 01) : https://www.youtube.com/watch?v=YUwm9BUhHIo&t=773s
+# Deleting an Item from a JSON Database in Python (Application of Python for DH | 02): https://www.youtube.com/watch?v=2-mAWFoIx08&list=PL2VXyKi-KpYsiB3NuIM_4iymBFPQnofA3&index=2
+# Editing an Item in a JSON database in Python (Application of Python for DH | 03) : https://www.youtube.com/watch?v=Vgh8jFz23t4
 #
+
+
+
+

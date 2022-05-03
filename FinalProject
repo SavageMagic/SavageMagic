@@ -1,0 +1,196 @@
+import json
+import os.path
+import re
+
+from Final_EmpClass import Employee
+
+
+# Performs regex check for digits.
+def dCheck(ID):
+    while (not re.search('^[0-9]+$', ID)):
+        print("Please Enter Only Digits")
+        ID = input("Enter ID of the employee: ")
+
+
+def main():
+    if os.path.exists("Employee.json"):
+        jFile = open("Employee.json", "r")
+        jDict = json.load(jFile)
+        jFile.close()
+
+        # Start new dictionary using sample data given if previous dict does not exist.
+    else:
+        Emp_1 = Employee(47899, "Susan", "Meyers", "Account", "Vice President")
+        Emp_2 = Employee(39119, "Mark", "Jones", "IT", "Programmer")
+        Emp_3 = Employee(81774, "Joy", "Rogers", "Manufacturing", "Engineer")
+
+        jDict = {
+            Emp_1.Emp_ID:[
+                {'Employee ID': Emp_1.Emp_ID,
+                 'First Name': Emp_1.E_fName,
+                 'Last Name': Emp_1.E_lName,
+                 'Department': Emp_1.E_Department,
+                 'Job Title': Emp_1.E_jTitle}],
+
+            Emp_2.Emp_ID:[
+                {'Employee ID': Emp_2.Emp_ID,
+                 'First Name': Emp_2.E_fName,
+                 'Last Name': Emp_2.E_lName,
+                 'Department': Emp_2.E_Department,
+                 'Job Title': Emp_2.E_jTitle}],
+
+            Emp_3.Emp_ID:[
+                {'Employee ID': Emp_3.Emp_ID,
+                 'First Name': Emp_3.E_fName,
+                 'Last Name': Emp_3.E_lName,
+                 'Department': Emp_3.E_Department,
+                 'Job Title': Emp_3.E_jTitle}]
+        }
+    choice = '0'
+
+    while choice == '0':
+
+        print("Choose one of the following options:")
+        print("1: Look up aan employee in the dictionary.")
+        print("2: Add a new employee to the dictionary.")
+        print("3: Change an existing employee’s name, department, or job title in the dictionary.")
+        print("4: Delete an employee from the dictionary.")
+        print("5: Quit the program.")
+        choice = input('Choose an option betwee 1-5: ')
+
+        if int(choice) == 1:
+
+            ID = input('Enter the ID of the employee: ')
+            dCheck(ID)
+
+            if ID in jDict.keys():
+
+                print(jDict[ID])
+
+            else:
+
+                print('Not found')
+
+        elif int(choice) == 2:
+
+            # Get the id of employeee
+
+            ID = input('Enter ID of the employee: ')
+
+            if int(ID) in jDict.keys():
+
+                # Display statement
+
+                print('Employee already exist')
+
+            else:
+
+                # Get the name of employee
+
+                fname = input('Enter the first name of the employee: ')
+
+                lName = input(' Enter the last name of the employee: ')
+
+                # Get the department of employee
+
+                Department = input('Enter department of the employee: ')
+
+                # Get the job title of employee
+
+                jTitle = input('Enter job title of the employee: ')
+
+                nEmp = Employee(int(ID), fname, lName, Department, jTitle)
+
+                jDict[nEmp.Emp_ID] = {
+                    nEmp.Emp_ID:
+                        [{'Employee ID': nEmp.Emp_ID,
+                         'First Name': nEmp.E_fName,
+                         'Last Name': nEmp.E_lName,
+                         'Department': nEmp.E_Department,
+                         'Job Title': nEmp.E_jTitle}]
+        }
+
+
+                print('Added')
+
+        elif int(choice) == 3:
+
+            ID = input('Enter ID of the employee: ')
+            while (not re.search('^[0-9]+$', ID)):
+                print("Please Enter Only Digits")
+                ID = input("Enter ID of the employee: ")
+            if ID in jDict.keys():
+
+                fname = input('Enter first name of the employee: ')
+
+                lName = input(' Enter last name of the employee:')
+
+                # Get the department of employee
+
+                Department = input('Enter department of the employee: ')
+
+                # Get the job title of employee
+
+                jTitle = input('Enter job title of the employee: ')
+
+                mEmp = Employee(int(ID), fname, lName, Department, jTitle)
+
+                jDict[mEmp.E_ID] = {
+                    mEmp.Emp_ID:
+                        [{'Employee ID': mEmp.Emp_ID,
+                         'First Name': mEmp.E_fName,
+                         'Last Name': mEmp.E_lName,
+                         'Department': mEmp.E_Department,
+                         'Job Title': mEmp.E_jTitle}]
+        }
+
+                print('Modified')
+
+            else:
+
+                print('Not Found')
+
+        elif int(choice) == 4:
+
+            # Get the id of employee
+
+            ID = input('Enter ID of the employee: ')
+            while (not re.search('^[0-9]+$', ID)):
+                print("Please Enter Only Digits")
+                ID = input("Enter ID of the employee: ")
+
+            # Display statement
+
+            print('Deleted: ', jDict.pop(int(ID), 'Not Found'))
+
+        elif int(choice) == 5:
+            for key, values in jDict.items():
+                fname, lName, Department, jTitle = values
+                print(" Employee ID = {}, Name = {} {}, Department = {}, Job Title = {}".format(key, fName, lName,
+                                                                                                Department, jTitle))
+        elif int(choice) == 6:
+
+            print('OK Bye')
+
+            break
+        else:
+
+            print("Invalid Choice.")
+        # Get the input from user
+
+        # call dump method
+
+        with open("Employee.json", "w") as outfile:
+            outfile.write(json.dumps(jDict))
+            outfile.close()
+
+        # close the file
+
+
+if __name__ == "__main__":
+    main()
+
+# Sources:
+# https://www.pythontutorial.net/python-basics/python-check-if-file-exists/
+# https://pythonspot.com/save-a-dictionary-to-a-file/
+#
